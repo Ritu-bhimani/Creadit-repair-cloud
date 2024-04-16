@@ -1,0 +1,144 @@
+def server1 = [:]
+    server1.name = "$qa_crc_react_ui_EC2_IP_1"
+    server1.host = "$qa_crc_react_ui_EC2_IP_1"
+    server1.allowAnyHosts = true
+    server1.appendName = true
+
+pipeline {
+    agent any
+    environment {
+        SERVER1="$qa_crc_react_ui_EC2_IP_1"
+        SERVICE_PORT="80"
+        SERVICE_NAME="crc-react-ui"
+        WEB_ROOT="/var/www/qa/crc-react-ui"
+        RELEASE_DIR="/var/www/qa-release/releases/crc-react-ui"
+        WEB_USER="apache"
+        DEPLOY_USER="jenkins"
+        BUILD_VERSION="$VERSION"
+        AWS_REGION="us-east-1"
+        S3_BUCKET="crc-microservices-qa-deploy"
+        AWS_ACCESS_KEY_ID= credentials('crc-microservices-qa-deploy-secret-key-id')
+        AWS_SECRET_ACCESS_KEY= credentials('crc-microservices-qa-deploy-secret-access-key')
+        SLACK_TOKEN="build-notification-ui-decouple-slack"
+        AUTOMATION_JOB="CRC-React-UI-Automation-dev-Commit"
+        STORYBOOK_JOB="qa-build-crc-nui-storybook"
+    }
+    stages {
+            stage('Prepare Deploy Script'){
+                steps{
+                      script{
+                        CI_ERROR = "Deployment Script Preparation Stage Failed"
+                        sh 'echo "#!/usr/bin/bash" > deploy.sh'
+                        sh 'echo "echo \"Login to Box\"" >> deploy.sh'
+                        sh 'echo "cd $RELEASE_DIR" >> deploy.sh'
+                        sh 'echo "sudo mkdir -p $SERVICE_NAME-$BUILD_VERSION" >> deploy.sh'
+                        sh 'echo "sudo tar -zxf $SERVICE_NAME-$BUILD_VERSION.tar.gz -C $SERVICE_NAME-$BUILD_VERSION" >> deploy.sh'
+                        sh 'echo "sudo rm -r $RELEASE_DIR/$SERVICE_NAME-$BUILD_VERSION.tar.gz" >> deploy.sh'
+                        sh 'echo "sudo ln -s $RELEASE_DIR/$SERVICE_NAME-$BUILD_VERSION $RELEASE_DIR/$SERVICE_NAME" >> deploy.sh'
+                        sh 'echo "sudo mv $RELEASE_DIR/$SERVICE_NAME /var/www/qa" >> deploy.sh'
+                        sh 'echo "sudo chown -R $WEB_USER:$WEB_USER $WEB_ROOT/" >> deploy.sh'
+                        sh 'echo "sudo apachectl graceful" >> deploy.sh'
+                        sh 'echo "sleep 10" >> deploy.sh'
+                        sh 'echo "echo Deployment success" >> deploy.sh'
+                    }
+                }
+          }
+
+        stage('Download Build File From S3') {
+            steps {
+                sh """
+                if [ ! -d artifacts ]; then
+                    mkdir artifacts
+                fi
+                """
+                sh "for i in `ls -ldth artifacts/* | tail -n+3 | awk '{print \$9}'`; do echo -e \"Removing old release \$i\n\"; rm -rf \$i; done"
+                sh 'aws s3 cp s3://$S3_BUCKET/$SERVICE_NAME/$SERVICE_NAME-$BUILD_VERSION.tar.gz ./artifacts/$SERVICE_NAME-$BUILD_VERSION.tar.gz'
+            }
+        }
+
+	stage('Deploy SERVER1'){
+                steps{
+                      script{
+                        CI_ERROR = "SERVER1 Deployment Failed"
+                        withCredentials([sshUserPrivateKey(credentialsId: 'CRC-UI-Decoupling-QA-Web-EC2', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]){
+                          
+                        server1.user = userName
+                        server1.identityFile = identity
+                        sshPut remote: server1, from: "./artifacts/${SERVICE_NAME}-${BUILD_VERSION}.tar.gz", into: "$RELEASE_DIR"
+                        sshScript remote: server1, script: 'deploy.sh'
+                        sshCommand remote: server1, command: "ls -ldth ${RELEASE_DIR}/*"
+                        sshCommand remote: server1, command: "for i in `ls -ldth ${RELEASE_DIR}/* | tail -n+3 | awk '{print \$9}'`; do echo -e \"Removing old release \$i\n\"; sudo rm -rf \$i; done"
+                        }
+                    }
+                }
+          }
+    }
+    post {
+        success {
+            echo "Success"
+            script{
+            env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+            env.GIT_AUTHOR = sh (script: 'git log -1 --pretty=%an ${GIT_COMMIT}', returnStdout: true).trim()
+            emailext mimeType: 'text/html',
+                to: "tanmay@creditrepaircloud.com,jeevan_sarikonda@creditrepaircloud.com,akshayrathod@creditrepaircloud.com,rajagopalnallapu@creditrepaircloud.com,narendra_vallabhaneni@creditrepaircloud.com,sai_vaddadi@creditrepaircloud.com,uday_sarikonda@creditrepaircloud.com,rayudu_a@therabbitspeed.com,rajesh_a@therabbitspeed.com,suresh_allaparthi@dilettante.in" ,
+                //to: "suresh_allaparthi@dilettante.in",
+                body: """
+                <html>
+                <body>
+                <p>Job:  ${env.JOB_NAME} </p>
+                <p>Runs in ${currentBuild.durationString} </p>
+                <p>Changes: ${env.GIT_COMMIT_MSG} </p>
+                <p>PR Created By: ${env.GIT_AUTHOR} </p>
+                <p>Build Report: ${env.BUILD_URL} </p>
+                </body>
+                </html>
+                """,
+                subject: "CRC Frontend React App | Jenkins Updates - Deployment[#${env.BUILD_NUMBER}] - `${currentBuild.currentResult}`", from: "devops@creditrepaircloud.com"
+            build job: "${STORYBOOK_JOB}", parameters: [string(name:'VERSION', value:"${BUILD_VERSION}")], wait: false
+            }
+        }
+        failure {
+            echo "Failed"
+            script {
+            env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+            env.GIT_AUTHOR = sh (script: 'git log -1 --pretty=%an ${GIT_COMMIT}', returnStdout: true).trim()
+            emailext mimeType: 'text/html',
+                to: "tanmay@creditrepaircloud.com,jeevan_sarikonda@creditrepaircloud.com,akshayrathod@creditrepaircloud.com,rajagopalnallapu@creditrepaircloud.com,narendra_vallabhaneni@creditrepaircloud.com,sai_vaddadi@creditrepaircloud.com,uday_sarikonda@creditrepaircloud.com,rayudu_a@therabbitspeed.com,rajesh_a@therabbitspeed.com,suresh_allaparthi@dilettante.in" ,
+                //to: "suresh_allaparthi@dilettante.in",
+                body: """
+                <html>
+                <body>
+                <p>Job:  ${env.JOB_NAME} </p>
+                <p>Runs in ${currentBuild.durationString} </p>
+                <p>Changes: ${env.GIT_COMMIT_MSG} </p>
+                <p>PR Created By: ${env.GIT_AUTHOR} </p>
+                <p>Build Report: ${env.BUILD_URL} </p>
+                </body>
+                </html>
+                """,
+                subject: "CRC Frontend React App | Jenkins Updates - Deployment[#${env.BUILD_NUMBER}] - `${currentBuild.currentResult}`", from: "devops@creditrepaircloud.com"
+            }
+        }
+        always {
+            echo "Post Steps...."
+            sh "rm -rf deploy.sh"
+            //sendSlackNotifcation()
+            //cleanWs()
+        }
+    }
+}
+
+// def sendSlackNotifcation() 
+// { 
+// 	env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+//     env.GIT_AUTHOR = sh (script: 'git log -1 --pretty=%an ${GIT_COMMIT}', returnStdout: true).trim()
+
+//     if ( currentBuild.currentResult == "SUCCESS" ) {
+// 		buildSummary = "Job:  ${env.JOB_NAME}-#${env.BUILD_NUMBER} is `${currentBuild.currentResult}` \n Run in ${currentBuild.durationString} \n Build Report: <${env.BUILD_URL}|Open>"
+// 		slackSend color : "good", message: "${buildSummary}", channel: '#build-notification-ui-decouple', tokenCredentialId: "$SLACK_TOKEN"
+// 		}
+// 	else {
+// 		buildSummary = "Job:  ${env.JOB_NAME}-#${env.BUILD_NUMBER} is `*${currentBuild.currentResult}*` \n Run in ${currentBuild.durationString} \n Error description: *${CI_ERROR}* \n Build Report :<${env.BUILD_URL}|Open>"
+// 		slackSend color : "danger", message: "${buildSummary}", channel: '#build-notification-ui-decouple', tokenCredentialId: "$SLACK_TOKEN"
+// 		}
+// }

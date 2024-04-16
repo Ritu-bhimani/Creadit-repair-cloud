@@ -1,0 +1,331 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render Bar chart and match the snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="MuiContainer-root MuiContainer-maxWidthLg css-1oqqzyl-MuiContainer-root"
+        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+      >
+        <div
+          class="recharts-wrapper"
+          role="region"
+          style="position: relative; cursor: default; width: 490px; height: 200px;"
+        >
+          <svg
+            class="recharts-surface"
+            height="200"
+            viewBox="0 0 490 200"
+            width="490"
+          >
+            <title />
+            <desc />
+            <defs>
+              <clippath
+                id="recharts1-clip"
+              >
+                <rect
+                  height="150"
+                  width="430"
+                  x="60"
+                  y="20"
+                />
+              </clippath>
+            </defs>
+            <g
+              class="recharts-cartesian-grid"
+            >
+              <g
+                class="recharts-cartesian-grid-horizontal"
+              >
+                <line
+                  fill="none"
+                  height="150"
+                  offset="[object Object]"
+                  stroke="#ccc"
+                  stroke-dasharray="0 0"
+                  width="430"
+                  x="60"
+                  x1="60"
+                  x2="490"
+                  y="20"
+                  y1="20"
+                  y2="20"
+                />
+                <line
+                  fill="none"
+                  height="150"
+                  offset="[object Object]"
+                  stroke="#ccc"
+                  stroke-dasharray="0 0"
+                  width="430"
+                  x="60"
+                  x1="60"
+                  x2="490"
+                  y="20"
+                  y1="170"
+                  y2="170"
+                />
+              </g>
+            </g>
+            <g
+              class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis"
+            >
+              <line
+                class="recharts-cartesian-axis-line"
+                fill="none"
+                height="150"
+                orientation="left"
+                stroke="#666"
+                width="60"
+                x="0"
+                x1="60"
+                x2="60"
+                y="20"
+                y1="20"
+                y2="170"
+              />
+              <g
+                class="recharts-cartesian-axis-ticks"
+              />
+            </g>
+          </svg>
+          <div
+            class="recharts-legend-wrapper"
+            style="position: absolute; width: 490px; height: auto; left: 0px; bottom: 0px;"
+          >
+            <div>
+              <img
+                src="[object Object]"
+              />
+              <li
+                style="color: black;"
+              >
+                Active Client
+              </li>
+            </div>
+            <div>
+              <img
+                src="[object Object]"
+              />
+              <li
+                style="color: black;"
+              >
+                Active Client
+              </li>
+            </div>
+          </div>
+          <div
+            class="recharts-tooltip-wrapper"
+            role="dialog"
+            style="transform: translate(undefinedpx, undefinedpx); pointer-events: none; visibility: hidden; position: absolute; top: 0px; left: 0px;"
+            tabindex="-1"
+          >
+            <div
+              class="recharts-default-tooltip"
+              style="margin: 0px; padding: 10px; background-color: rgb(255, 255, 255); border: 1px solid #ccc; white-space: nowrap;"
+            >
+              <p
+                class="recharts-tooltip-label"
+                style="margin: 0px;"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      aria-hidden="true"
+      id="recharts_measurement_span"
+      style="position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; white-space: pre;"
+    >
+      0
+    </span>
+  </body>,
+  "container": <div>
+    <div
+      class="MuiContainer-root MuiContainer-maxWidthLg css-1oqqzyl-MuiContainer-root"
+      css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+    >
+      <div
+        class="recharts-wrapper"
+        role="region"
+        style="position: relative; cursor: default; width: 490px; height: 200px;"
+      >
+        <svg
+          class="recharts-surface"
+          height="200"
+          viewBox="0 0 490 200"
+          width="490"
+        >
+          <title />
+          <desc />
+          <defs>
+            <clippath
+              id="recharts1-clip"
+            >
+              <rect
+                height="150"
+                width="430"
+                x="60"
+                y="20"
+              />
+            </clippath>
+          </defs>
+          <g
+            class="recharts-cartesian-grid"
+          >
+            <g
+              class="recharts-cartesian-grid-horizontal"
+            >
+              <line
+                fill="none"
+                height="150"
+                offset="[object Object]"
+                stroke="#ccc"
+                stroke-dasharray="0 0"
+                width="430"
+                x="60"
+                x1="60"
+                x2="490"
+                y="20"
+                y1="20"
+                y2="20"
+              />
+              <line
+                fill="none"
+                height="150"
+                offset="[object Object]"
+                stroke="#ccc"
+                stroke-dasharray="0 0"
+                width="430"
+                x="60"
+                x1="60"
+                x2="490"
+                y="20"
+                y1="170"
+                y2="170"
+              />
+            </g>
+          </g>
+          <g
+            class="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis"
+          >
+            <line
+              class="recharts-cartesian-axis-line"
+              fill="none"
+              height="150"
+              orientation="left"
+              stroke="#666"
+              width="60"
+              x="0"
+              x1="60"
+              x2="60"
+              y="20"
+              y1="20"
+              y2="170"
+            />
+            <g
+              class="recharts-cartesian-axis-ticks"
+            />
+          </g>
+        </svg>
+        <div
+          class="recharts-legend-wrapper"
+          style="position: absolute; width: 490px; height: auto; left: 0px; bottom: 0px;"
+        >
+          <div>
+            <img
+              src="[object Object]"
+            />
+            <li
+              style="color: black;"
+            >
+              Active Client
+            </li>
+          </div>
+          <div>
+            <img
+              src="[object Object]"
+            />
+            <li
+              style="color: black;"
+            >
+              Active Client
+            </li>
+          </div>
+        </div>
+        <div
+          class="recharts-tooltip-wrapper"
+          role="dialog"
+          style="transform: translate(undefinedpx, undefinedpx); pointer-events: none; visibility: hidden; position: absolute; top: 0px; left: 0px;"
+          tabindex="-1"
+        >
+          <div
+            class="recharts-default-tooltip"
+            style="margin: 0px; padding: 10px; background-color: rgb(255, 255, 255); border: 1px solid #ccc; white-space: nowrap;"
+          >
+            <p
+              class="recharts-tooltip-label"
+              style="margin: 0px;"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
